@@ -58,7 +58,7 @@ if((isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') || (isset($_SESSION
 					
 					if(isset($_POST['signin'])){
 						$user = trim($_POST['username']);
-						$password = md5($_POST['password']);
+						$password = ($_POST['password']);
 						$remember = $_POST['remember'];
 						
 						$user = mysqli_real_escape_string($conn, $user);

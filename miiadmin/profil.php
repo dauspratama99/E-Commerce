@@ -86,6 +86,13 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 						</ul>
 					</ul>
 				</li>
+
+				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Pengaturan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
+					<ul class="sidebar-second-child">
+						<li><a href="ganti_password.php">Ganti Password</a></li>
+					</ul>
+				</li>
+				
 				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Laporan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
 					<ul class="sidebar-second-child">
 						<!-- <li><a href="pelanggan_report.php">Laporan pelanggan</a></li> -->

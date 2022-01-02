@@ -100,6 +100,13 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 						<li><a href="product.php">Data Produk</a></li>
 					</ul>
 				</li>
+
+				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Pengaturan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
+					<ul class="sidebar-second-child">
+						<li><a href="ganti_password.php">Ganti Password</a></li>
+					</ul>
+				</li>
+				
 				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Laporan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
 					<ul class="sidebar-second-child">
 						<!-- <li><a href="pelanggan_report.php">Laporan pelanggan</a></li> -->
@@ -108,14 +115,6 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 						<li><a href="penjualan_report.php">Laporan Penjualan</a></li>
 					</ul>
 				</li>
-				<!-- <li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Grafik<i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
-					<ul class="sidebar-second-child" style="display:block;">
-						<li><a href="chart_sell_byday.php">Penjualan per Hari</a></li>
-						<li><a href="chart_sell_bymonth.php">Penjualan per Bulan</a></li>
-						<li class="active"><a href="chart_order_byday.php">Pemesanan per Hari</a></li>
-						<li><a href="chart_order_bymonth.php">Pemesanan per Bulan</a></li>
-					</ul>
-				</li> -->
 			</ul>
 		</aside>
 

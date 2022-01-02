@@ -81,13 +81,6 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 						<li><a href="buku.php">Data Buku</a></li>
 					</ul>
 				</li>
-
-				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Pengaturan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
-					<ul class="sidebar-second-child">
-						<li><a href="ganti_password.php">Ganti Password</a></li>
-					</ul>
-				</li>
-				
 				<li class="sidebar-child"><a href="#"><i class="fa fa-th"></i> Laporan <i class="sidebar-fa fa fa-angle-down pull-right"></i></a>
 					<ul class="sidebar-second-child">
 						<!-- <li><a href="pelanggan_report.php">Laporan pelanggan</a></li> -->
@@ -112,8 +105,8 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-lg-12">
-								<h1>Kategori Buku</h1>
-								<a href="?act=add" class="btn btn-default"><i class="fa fa-plus"></i> Tambah Baru</a>
+								<h1>User / Admin</h1>
+								<a href="?act=add" class="btn btn-default"><i class="fa fa-plus"></i> Tambah User Baru</a>
 								<div class="clearfix"></div>
 
 								<div class="table-responsive" style="margin-top:10px;">
@@ -121,40 +114,43 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 										<thead>
 											<tr>
 												<th width="10">#</th>
-												<th>Nama Kategori</th>
-
+												<th>Nama Lengkap</th>
+												<th>Username</th>
+												<th>Password</th>
 												<th width="40">Aksi</th>
 											</tr>
 										</thead>
 										<tbody>
 											<?php
-											$sql = "SELECT * FROM kategori";
+											$sql = "SELECT * FROM users";
 											$query = mysqli_query($conn, $sql);
 											$no = 0;
 											while ($row = mysqli_fetch_assoc($query)) {
 											?>
 												<tr>
 													<td width="10" align="center"><?php echo ++$no; ?></td>
-													<td align="center"><?php echo $row['category']; ?></td>
+													<td align="center"><?php echo $row['fullname']; ?></td>
+													<td align="center"><?php echo $row['user']; ?></td>
+													<td align="center"><?php echo $row['pass']; ?></td>
 													<td width="50" align="center">
-														<a href="?act=edit&id=<?php echo $row['cat_id']; ?>" class="mybtn"><i class="fa fa-pencil-square-o"> Edit</i></a>
+														<a href="?act=edit&id=<?php echo $row['user_id']; ?>" class="mybtn"><i class="fa fa-pencil-square-o"> Edit</i></a>
 
 
-														<a href="<?php echo $row['cat_id']; ?>" data-target="#confirm-delete_<?php echo $row['cat_id']; ?>" data-toggle="modal" class="mybtn btn-show"><i class="fa fa-trash-o"> Hapus</i></a>
-														<div class="modal fade" id="confirm-delete_<?php echo $row['cat_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+														<a href="<?php echo $row['user_id']; ?>" data-target="#confirm-delete_<?php echo $row['user_id']; ?>" data-toggle="modal" class="mybtn btn-show"><i class="fa fa-trash-o"> Hapus</i></a>
+														<div class="modal fade" id="confirm-delete_<?php echo $row['user_id']; ?>" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 															<div class="modal-dialog">
 																<div class="modal-content">
 																	<div class="modal-header">
 																		<button type="button" class="close" data-dismiss="modal" aria-label="Close" aria-hidden="true">&times;</button>
 																		<h4 class="modal-tittle">
-																			<i class="fa fa-trash-o"></i> Konfirmasi (<?php echo $row['cat_id']; ?>)
+																			<i class="fa fa-trash-o"></i> Konfirmasi (<?php echo $row['user_id']; ?>)
 																		</h4>
 																	</div>
 																	<div class="modal-body">
 																		<p>Yakinkah Anda ingin menghapus data ini ?</p>
 																	</div>
 																	<div class="modal-footer">
-																		<a href="?act=delete&id=<?php echo $row['cat_id']; ?>" class="btn btn-danger" id="<?php echo $row['cat_id']; ?>">Ya</a>
+																		<a href="?act=delete&id=<?php echo $row['user_id']; ?>" class="btn btn-danger" id="<?php echo $row['user_id']; ?>">Ya</a>
 																		<a href="#" type="button" class="btn btn-default btn-cancel" data-dismiss="modal" aria-hidden="true">Tidak</a>
 																	</div>
 																</div>
@@ -181,47 +177,46 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 							<div class="col-lg-12">
 
 
-								<?php
-								$error = false;
+							<?php
 
-								$category = "";
-								$catErr = "";
+
 
 								if (isset($_POST['save'])) {
-									$query = mysqli_query($conn, "SELECT * FROM kategori WHERE category='" . $_POST['cat_name'] . "'");
 
-									if ($_SERVER['REQUEST_METHOD'] == "POST") {
-										if (empty($_POST['cat_name'])) {
-											$error = true;
-											$catErr = "Masukkan isi nama kategori";
-										} else {
-											$category = $_POST['cat_name'];
-											if (!preg_match("/^[a-zA-Z ]*$/", $_POST['cat_name'])) {
-												$error = true;
-												$catErr = "Isi nama kategori harus menggunakan huruf dan spasi";
-											}
-										}
-									}
+									$fullname = $_POST['fullname'];
+									$user = $_POST['user'];
+									$password = $_POST['password'];
 
-									if (!$error) {
-										if (mysqli_num_rows($query) > 0) {
-											echo "<div class='alert alert-danger'>Kategori <b>$category</b> sudah masih ada!</div>";
-										} else {
-											mysqli_query($conn, "INSERT INTO kategori VALUES (NULL,'$category')");
-											header('location: kategori.php');
-										}
-									}
+									$qry = "INSERT INTO users (fullname, user, pass) VALUES ('$fullname','$user','$password')";
+
+									$hasil = mysqli_query($conn, $qry);
+
+									header('location: ganti_password.php');
 								}
+
 								?>
 
 								<form action="?act=add" class="form-horizontal" method="POST">
-									<legend>Tambah Baru</legend>
+									<legend>Tambah Admin Baru</legend>
 									<!-- Category Name -->
 									<div class="form-group">
-										<label class="col-md-2 control-label">Nama Kategori <i>(required)</i></label>
+										<label class="col-md-2 control-label">Nama Lengkap <i>(required)</i></label>
 										<div class="col-md-10">
-											<input type="text" name="cat_name" placeholder="Masukkan isi nama kategori" class="form-control" value="<?php echo isset($category) ? $category : ' '; ?>">
-											<span class="text-danger"><?php echo $catErr; ?></span>
+											<input type="text" name="fullname" placeholder="fullname" class="form-control">
+										</div>
+									</div>
+
+                                    <div class="form-group">
+										<label class="col-md-2 control-label">Username <i>(required)</i></label>
+										<div class="col-md-10">
+											<input type="text" name="user" placeholder="Username" class="form-control">
+										</div>
+									</div>
+
+                                    <div class="form-group">
+										<label class="col-md-2 control-label">Password <i>(Minimal 8 Karakter)</i></label>
+										<div class="col-md-10">
+											<input type="password" name="password" placeholder="Password" class="form-control">
 										</div>
 									</div>
 									<!-- Button -->
@@ -229,7 +224,7 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 										<label class="col-md-2 control-label"></label>
 										<div class="col-md-10">
 											<button type="submit" class="btn btn-warning" name="save">Simpan</button>
-											<a href="kategori.php"><button type="button" class="btn btn-link">Batal</button></a>
+											<a href="ganti_password.php"><button type="button" class="btn btn-link">Batal</button></a>
 										</div>
 									</div>
 								</form>
@@ -245,56 +240,82 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 					<div class="container-fluid">
 						<div class="row">
 							<div class="col-lg-12">
-								<?php
+                            <?php
 
-								$id = $_GET['id'];
+                                $id = $_GET['id'];
 
-								$query = mysqli_query($conn, "SELECT * FROM kategori WHERE cat_id = '" . $id . "'");
-								$data = mysqli_fetch_array($query);
+                                $query = mysqli_query($conn, "SELECT * FROM users WHERE user_id = '" . $id . "'");
+                                $data = mysqli_fetch_array($query);
 
-								$error = false;
-								$category = "";
-								$catErr = "";
 
-								if (isset($_POST['update'])) {
+                                $error = false;
+                                $brand  = "";
+                                $brandErr = "";
 
-									if ($_SERVER['REQUEST_METHOD'] == "POST") {
-										if (empty($_POST['cat_name'])) {
-											$error = true;
-											$catErr = "Please enter the category name";
-										} else {
-											$category = mysqli_real_escape_string($conn, $_POST['cat_name']);
-											if (!preg_match("/^[a-zA-Z ]*$/", $_POST['cat_name'])) {
-												$error = true;
-												$catErr = "Name must contain only alphabets and space";
-											}
-										}
-									}
+                                if (isset($_POST['update'])) {
 
-									if (!$error) {
-										mysqli_query($conn, "UPDATE kategori SET category='$category' WHERE cat_id='" . $id . "'");
-										header('location: kategori.php');
-									}
-								}
+                                    if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
-								?>
-								<form action="?act=edit&id=<?php echo $_GET['id']; ?>" class="form-horizontal" method="POST">
-									<legend>Edit Category</legend>
-									<!-- Category Name -->
+                                        if (empty($_POST['fullname'])) {
+                                            $error = true;
+                                        }
+
+                                        if (empty($_POST['username'])) {
+                                            $error = true;
+                                        }
+
+                                        if (empty($_POST['password'])) {
+                                            $error = true;
+                                        }
+                                    }
+
+
+                                    if (!$error) {
+
+                                        $fullname = $_POST['fullname'];
+                                        $username    = $_POST['username'];
+                                        $password    = $_POST['password'];
+
+                                        mysqli_query($conn, "UPDATE users SET fullname='$fullname', user='$username', pass='$password' WHERE user_id='" . $id . "'");
+                                        header('location: ganti_password.php');
+                                    }
+                                }
+
+                                ?>
+							<form action="?act=edit&id=<?php echo $_GET['id']; ?>" class="form-horizontal" method="POST" enctype="multipart/form-data">
+									<legend>Edit Data User / Admin</legend>
+									<!-- Brand Name -->
 									<div class="form-group">
-										<label class="col-md-2 control-label">Nama Kategori <i>(required)</i></label>
+										<label class="col-md-2 control-label">Nama Lengkap<i>(required)</i></label>
 										<div class="col-md-10">
-											<input type="text" name="cat_name" value="<?php echo isset($_POST['cat_name']) ? $_POST['cat_name'] : $data['category']; ?>" class="form-control">
+											<input type="text" name="fullname" value="<?php echo $data['fullname']; ?>" class="form-control">
 											<input type="hidden" name="id" value="<?php echo $_GET['id']; ?>">
-											<span class="text-danger"><?php echo $catErr; ?></span>
+											<span class="text-danger"><?php echo $brandErr; ?></span>
 										</div>
 									</div>
-									<!-- Button -->
+
+									<div class="form-group">
+										<label class="col-md-2 control-label">Username<i>(required)</i></label>
+										<div class="col-md-10">
+											<input type="text" name="username" value="<?php echo $data['user']; ?>" class="form-control">
+											<span class="text-danger"><?php echo $brandErr; ?></span>
+										</div>
+									</div>
+
+
+									<div class="form-group">
+										<label class="col-md-2 control-label">Password <i>(minimal 8 karakter)</i></label>
+										<div class="col-md-10">
+											<input type="password" name="password" value="<?php echo $data['pass']; ?>" class="form-control">
+											<span class="text-danger"><?php echo $brandErr; ?></span>
+										</div>
+									</div>
+
 									<div class="form-group">
 										<label class="col-md-2 control-label"></label>
 										<div class="col-md-10">
-											<button type="submit" class="btn btn-warning" name="update">Ubah</button>
-											<a href="kategori.php"><button type="button" class="btn btn-link">Batal</button></a>
+											<button type="submit" class="btn btn-warning" name="update">Update</button>
+											<a href="pelanggan.php"><button type="button" class="btn btn-link">Batal</button></a>
 										</div>
 									</div>
 								</form>
@@ -307,11 +328,11 @@ if (isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != '') {
 			case "delete":
 				if (isset($_GET['id'])) {
 					$id = $_GET['id'];
-					$query = "DELETE FROM kategori WHERE cat_id = '$id'";
+					$query = "DELETE FROM users WHERE user_id = '$id'";
 					if (!$res = mysqli_query($conn, $query)) {
 						exit(mysqli_error());
 					}
-					header('location: kategori.php');
+					header('location: ganti_password.php');
 				}
 			?>
 
